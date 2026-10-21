@@ -1,0 +1,118 @@
+{
+  "istep": "1.0",
+  "id": "fall-single-leg-stand-v1",
+  "title": "Single-leg stand (with chair)",
+  "channel": "fall_prevention",
+  "language": "en-US",
+  "video": {
+    "src": "video.mp4",
+    "durationSec": 40
+  },
+  "tracking": [
+    "pose",
+    "objects"
+  ],
+  "camera": {
+    "view": "front",
+    "hint": "Place the camera at hip height, 2–3 m away."
+  },
+  "disclaimer": "Use exercises prescribed or approved by your physiotherapist. Stop if you feel pain, dizziness or unsteadiness.",
+  "reference": {
+    "src": "reference.json"
+  },
+  "safety": {
+    "swayStop": {
+      "enabled": true,
+      "maxLateralSway": 0.08,
+      "windowSec": 1.5
+    }
+  },
+  "gates": [
+    {
+      "id": "chair",
+      "t": 3,
+      "type": "safety_prerequisite",
+      "label": "Stand next to a sturdy chair",
+      "checks": [
+        {
+          "kind": "object_near",
+          "object": "chair",
+          "near": "hips",
+          "maxDistance": 0.35,
+          "minScore": 0.5,
+          "allowAlternatives": false
+        },
+        {
+          "kind": "full_body_visible"
+        },
+        {
+          "kind": "stable",
+          "maxLateralSway": 0.04,
+          "windowSec": 1
+        }
+      ],
+      "minFrames": 15,
+      "fallbackTip": "Place a sturdy chair beside you and rest one hand on its back."
+    },
+    {
+      "id": "right-up",
+      "t": 12,
+      "type": "hold_duration",
+      "label": "Lift your right foot slightly",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "torso": 0
+        }
+      },
+      "joints": [
+        "torso"
+      ],
+      "tolerance": {
+        "angleDeg": 15
+      },
+      "conditions": [
+        {
+          "kind": "foot_lift",
+          "foot": "right",
+          "min": 0.08
+        }
+      ],
+      "holdSec": 5,
+      "graceSec": 0.5,
+      "fallbackTip": "Keep your hand on the chair and lift your right foot just off the floor."
+    },
+    {
+      "id": "left-up",
+      "t": 26,
+      "type": "hold_duration",
+      "label": "Now lift your left foot",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "torso": 0
+        }
+      },
+      "joints": [
+        "torso"
+      ],
+      "tolerance": {
+        "angleDeg": 15
+      },
+      "conditions": [
+        {
+          "kind": "foot_lift",
+          "foot": "left",
+          "min": 0.08
+        }
+      ],
+      "holdSec": 5,
+      "graceSec": 0.5,
+      "fallbackTip": "Keep your hand on the chair and lift your left foot just off the floor."
+    }
+  ],
+  "credits": {
+    "creator": "InStep demonstration lesson",
+    "license": "CC-BY-4.0"
+  }
+}

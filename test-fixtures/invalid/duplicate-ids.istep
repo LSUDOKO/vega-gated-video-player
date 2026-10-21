@@ -1,0 +1,138 @@
+{
+  "istep": "1.0",
+  "id": "fall-heel-raise-v1",
+  "title": "Heel raises (with chair)",
+  "channel": "fall_prevention",
+  "language": "en-US",
+  "video": {
+    "src": "video.mp4",
+    "durationSec": 48
+  },
+  "tracking": [
+    "pose",
+    "objects"
+  ],
+  "camera": {
+    "view": "front",
+    "hint": "Place the camera at hip height, 2–3 m away."
+  },
+  "disclaimer": "Use exercises prescribed or approved by your physiotherapist. Stop if you feel pain, dizziness or unsteadiness.",
+  "reference": {
+    "src": "reference.json"
+  },
+  "safety": {
+    "swayStop": {
+      "enabled": true,
+      "maxLateralSway": 0.06,
+      "windowSec": 1.5
+    }
+  },
+  "defaults": {
+    "tolerance": {
+      "angleDeg": 20
+    },
+    "coachAfterSec": 6,
+    "timeoutSec": 45
+  },
+  "gates": [
+    {
+      "id": "chair",
+      "t": 3,
+      "type": "safety_prerequisite",
+      "label": "Stand next to a sturdy chair",
+      "checks": [
+        {
+          "kind": "object_near",
+          "object": "chair",
+          "near": "hips",
+          "maxDistance": 0.35,
+          "minScore": 0.5,
+          "allowAlternatives": false
+        },
+        {
+          "kind": "full_body_visible"
+        },
+        {
+          "kind": "stable",
+          "maxLateralSway": 0.04,
+          "windowSec": 1
+        }
+      ],
+      "minFrames": 15,
+      "fallbackTip": "Place a sturdy chair beside you and rest one hand on its back."
+    },
+    {
+      "id": "stand",
+      "t": 8,
+      "type": "pose_match",
+      "label": "Stand tall, hand on chair",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "l_knee": 175,
+          "r_knee": 175,
+          "torso": 0
+        }
+      },
+      "joints": [
+        "l_knee",
+        "r_knee",
+        "torso"
+      ],
+      "tolerance": {
+        "angleDeg": 15
+      },
+      "minFrames": 8,
+      "fallbackTip": "Stand up straight with soft knees and one hand on the chair."
+    },
+    {
+      "id": "stand",
+      "t": 22,
+      "type": "rep_count",
+      "label": "Heel raises — five times",
+      "metric": {
+        "kind": "heel_lift"
+      },
+      "range": {
+        "low": 0.02,
+        "high": 0.06
+      },
+      "reps": 5,
+      "rewindTo": 12,
+      "then": "loop_segment",
+      "fallbackTip": "Rise up slowly onto the balls of your feet, then lower your heels gently."
+    },
+    {
+      "id": "final-hold",
+      "t": 36,
+      "type": "hold_duration",
+      "label": "Rise onto your toes and hold",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "l_knee": 175,
+          "r_knee": 175,
+          "torso": 0
+        }
+      },
+      "joints": [
+        "l_knee",
+        "r_knee",
+        "torso"
+      ],
+      "conditions": [
+        {
+          "kind": "heel_lift",
+          "min": 0.05
+        }
+      ],
+      "holdSec": 2,
+      "graceSec": 0.4,
+      "fallbackTip": "Push up through the balls of your feet and keep your knees soft."
+    }
+  ],
+  "credits": {
+    "creator": "InStep demonstration lesson",
+    "license": "CC-BY-4.0"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "istep": "1.0",
+  "id": "asl-fingerspell-abc-v1",
+  "title": "Fingerspelling: A B C L Y",
+  "channel": "sign_language",
+  "language": "en-US",
+  "video": {
+    "src": "video.mp4",
+    "durationSec": 44
+  },
+  "tracking": [
+    "hands"
+  ],
+  "camera": {
+    "view": "hands",
+    "hint": "Hold your hand up at chest height, palm facing the camera."
+  },
+  "disclaimer": "A practice aid created with Deaf signers. Learn with Deaf teachers and community too.",
+  "reference": {
+    "src": "reference.json"
+  },
+  "gates": [
+    {
+      "id": "a",
+      "t": 6,
+      "type": "hand_sign",
+      "label": "Letter A",
+      "target": {
+        "curl": [
+          0.2,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "fallbackTip": "Make a fist with your thumb resting up the side of your index finger."
+    },
+    {
+      "id": "b",
+      "t": 12,
+      "type": "hand_sign",
+      "label": "Letter B",
+      "target": {
+        "curl": [
+          0.8,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "fallbackTip": "Fingers straight up and together, thumb folded across your palm."
+    },
+    {
+      "id": "c",
+      "t": 18,
+      "type": "hand_sign",
+      "label": "Letter C",
+      "target": {
+        "curl": [
+          0.3,
+          0.5,
+          0.5,
+          0.5,
+          0.5
+        ]
+      },
+      "fallbackTip": "Curve all your fingers and thumb like you are holding a cup."
+    },
+    {
+      "id": "l",
+      "t": 24,
+      "type": "hand_sign",
+      "label": "Letter L",
+      "target": {
+        "curl": [
+          0,
+          0,
+          1,
+          1,
+          1
+        ],
+        "spread": {
+          "thumb_index": "open"
+        }
+      },
+      "fallbackTip": "Point your index finger up and your thumb out to the side."
+    },
+    {
+      "id": "y",
+      "t": 30,
+      "type": "hand_sign",
+      "label": "Letter Y",
+      "target": {
+        "curl": [
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      "fallbackTip": "Fold your middle three fingers; stretch out your thumb and little finger."
+    },
+    {
+      "id": "cab",
+      "t": 38,
+      "type": "sequence_order",
+      "label": "Spell: C-A-B",
+      "steps": [
+        {
+          "type": "hand_sign",
+          "label": "C",
+          "target": {
+            "curl": [
+              0.3,
+              0.5,
+              0.5,
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "type": "hand_sign",
+          "label": "A",
+          "target": {
+            "curl": [
+              0.2,
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "type": "hand_sign",
+          "label": "B",
+          "target": {
+            "curl": [
+              0.8,
+              0,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "stepWindowSec": 6,
+      "fallbackTip": "Take it one letter at a time — hold each shape for a moment."
+    }
+  ],
+  "credits": {
+    "creator": "Practice demo — reviewed by: not yet reviewed",
+    "license": "CC-BY-4.0"
+  }
+}

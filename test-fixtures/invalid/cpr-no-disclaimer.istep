@@ -1,0 +1,60 @@
+{
+  "istep": "1.0",
+  "id": "cpr-rhythm-v1",
+  "title": "Hands-only CPR rhythm — 30 compressions",
+  "channel": "cpr",
+  "language": "en-US",
+  "video": {
+    "src": "video.mp4",
+    "durationSec": 30
+  },
+  "tracking": [
+    "pose"
+  ],
+  "camera": {
+    "view": "side",
+    "hint": "Place the camera at your side, about 1.5 m away, so it sees your arms and shoulders."
+  },
+  "reference": {
+    "src": "reference.json"
+  },
+  "gates": [
+    {
+      "id": "placement",
+      "t": 4,
+      "type": "safety_prerequisite",
+      "label": "Kneel beside a firm cushion",
+      "checks": [
+        {
+          "kind": "upper_body_visible"
+        }
+      ],
+      "minFrames": 10,
+      "fallbackTip": "Turn the camera to your side so it can see your shoulders, arms and hands."
+    },
+    {
+      "id": "rhythm",
+      "t": 12,
+      "type": "rhythm_bpm",
+      "label": "Push hard and fast — follow the beat",
+      "signal": {
+        "landmark": "wrists_mid",
+        "axis": "y"
+      },
+      "bpm": {
+        "min": 100,
+        "max": 120
+      },
+      "count": 30,
+      "armsStraight": {
+        "minElbowDeg": 160
+      },
+      "metronomeBpm": 110,
+      "fallbackTip": "Lock your elbows and let your shoulders do the work."
+    }
+  ],
+  "credits": {
+    "creator": "InStep demonstration lesson",
+    "license": "CC-BY-4.0"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "istep": "1.0",
+  "id": "asl-i-love-you-v1",
+  "title": "Your first sign: I love you",
+  "channel": "sign_language",
+  "language": "en-US",
+  "video": {
+    "src": "video.mp4",
+    "durationSec": 15
+  },
+  "tracking": [
+    "hands"
+  ],
+  "camera": {
+    "view": "hands",
+    "hint": "Hold your hand up at chest height, about 1 m from the camera."
+  },
+  "disclaimer": "A practice aid created with Deaf signers. Learn with Deaf teachers and community too.",
+  "reference": {
+    "src": "reference.json"
+  },
+  "gates": [
+    {
+      "id": "ily",
+      "t": 7.5,
+      "type": "hand_sign",
+      "label": "Sign: I love you",
+      "hand": "any",
+      "target": {
+        "curl": [
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        "spread": {
+          "thumb_index": "open"
+        }
+      },
+      "tolerance": {
+        "curl": 0.3
+      },
+      "minFrames": 10,
+      "fallbackTip": "Fold your middle and ring fingers down; keep thumb, index and little finger up."
+    }
+  ],
+  "credits": {
+    "creator": "Practice demo — reviewed by: not yet reviewed",
+    "license": "CC-BY-4.0"
+  }
+}

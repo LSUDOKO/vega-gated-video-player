@@ -1,0 +1,55 @@
+{
+  "name": "vega-gated-video-player",
+  "version": "0.1.0",
+  "description": "Body-aware video for Vega OS: a player that pauses at .istep gates and resumes when live pose or hand landmarks pass them.",
+  "license": "MIT",
+  "repository": "github:LSUDOKO/vega-gated-video-player",
+  "keywords": [
+    "vega",
+    "fire-tv",
+    "react-native",
+    "mediapipe",
+    "pose",
+    "video",
+    "istep",
+    "accessibility"
+  ],
+  "type": "module",
+  "main": "./src/index.ts",
+  "react-native": "./src/react-native.ts",
+  "types": "./src/index.ts",
+  "files": [
+    "src",
+    "schema",
+    "examples",
+    "!src/**/*.test.ts"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*",
+    "@amazon-devices/react-native-w3cmedia": "*"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "@amazon-devices/react-native-w3cmedia": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.5",
+    "@types/node": "^22.10.0"
+  }
+}

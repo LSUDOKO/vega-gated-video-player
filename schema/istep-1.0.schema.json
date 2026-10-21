@@ -1,0 +1,1699 @@
+{
+  "$id": "https://github.com/LSUDOKO/InStep/schema/istep-1.0.schema.json",
+  "title": ".istep track v1.0",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "istep": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "fall_prevention",
+        "stroke_rehab",
+        "sign_language",
+        "cpr",
+        "kids"
+      ]
+    },
+    "language": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 16
+    },
+    "video": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "minLength": 1
+        },
+        "durationSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "required": [
+        "src",
+        "durationSec"
+      ]
+    },
+    "tracking": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "pose",
+          "hands",
+          "objects"
+        ]
+      }
+    },
+    "camera": {
+      "type": "object",
+      "properties": {
+        "view": {
+          "type": "string",
+          "enum": [
+            "front",
+            "side",
+            "hands"
+          ]
+        },
+        "hint": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "view",
+        "hint"
+      ]
+    },
+    "disclaimer": {
+      "type": "string"
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "src"
+      ]
+    },
+    "safety": {
+      "type": "object",
+      "properties": {
+        "swayStop": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "maxLateralSway": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "windowSec": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "required": [
+            "enabled",
+            "maxLateralSway",
+            "windowSec"
+          ]
+        }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "tolerance": {
+          "type": "object",
+          "properties": {
+            "angleDeg": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 90
+            },
+            "curl": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "coachAfterSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "timeoutSec": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "learning": {
+                "type": "boolean"
+              },
+              "tolerance": {
+                "type": "object",
+                "properties": {
+                  "angleDeg": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 90
+                  },
+                  "curl": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coachAfterSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "timeoutSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "fallbackTip": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "rewindTo": {
+                "type": "number",
+                "minimum": 0
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "resume",
+                  "loop_segment"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "pose_match"
+              },
+              "target": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "const": "reference"
+                      },
+                      "atSec": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "atSec"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "const": "angles"
+                      },
+                      "angles": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "enum": [
+                            "l_shoulder",
+                            "r_shoulder",
+                            "l_elbow",
+                            "r_elbow",
+                            "l_hip",
+                            "r_hip",
+                            "l_knee",
+                            "r_knee",
+                            "l_ankle",
+                            "r_ankle",
+                            "torso"
+                          ]
+                        },
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 180
+                        }
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "angles"
+                    ]
+                  }
+                ]
+              },
+              "joints": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "l_shoulder",
+                    "r_shoulder",
+                    "l_elbow",
+                    "r_elbow",
+                    "l_hip",
+                    "r_hip",
+                    "l_knee",
+                    "r_knee",
+                    "l_ankle",
+                    "r_ankle",
+                    "torso"
+                  ]
+                }
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "heel_lift"
+                        },
+                        "min": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "min"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "foot_lift"
+                        },
+                        "foot": {
+                          "type": "string",
+                          "enum": [
+                            "left",
+                            "right",
+                            "either"
+                          ]
+                        },
+                        "min": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "foot",
+                        "min"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "minFrames": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "id",
+              "t",
+              "label",
+              "fallbackTip",
+              "type",
+              "target",
+              "joints"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "learning": {
+                "type": "boolean"
+              },
+              "tolerance": {
+                "type": "object",
+                "properties": {
+                  "angleDeg": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 90
+                  },
+                  "curl": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coachAfterSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "timeoutSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "fallbackTip": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "rewindTo": {
+                "type": "number",
+                "minimum": 0
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "resume",
+                  "loop_segment"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "hold_duration"
+              },
+              "target": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "const": "reference"
+                      },
+                      "atSec": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "atSec"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": {
+                        "type": "string",
+                        "const": "angles"
+                      },
+                      "angles": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "enum": [
+                            "l_shoulder",
+                            "r_shoulder",
+                            "l_elbow",
+                            "r_elbow",
+                            "l_hip",
+                            "r_hip",
+                            "l_knee",
+                            "r_knee",
+                            "l_ankle",
+                            "r_ankle",
+                            "torso"
+                          ]
+                        },
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 180
+                        }
+                      }
+                    },
+                    "required": [
+                      "source",
+                      "angles"
+                    ]
+                  }
+                ]
+              },
+              "joints": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "l_shoulder",
+                    "r_shoulder",
+                    "l_elbow",
+                    "r_elbow",
+                    "l_hip",
+                    "r_hip",
+                    "l_knee",
+                    "r_knee",
+                    "l_ankle",
+                    "r_ankle",
+                    "torso"
+                  ]
+                }
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "heel_lift"
+                        },
+                        "min": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "min"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "foot_lift"
+                        },
+                        "foot": {
+                          "type": "string",
+                          "enum": [
+                            "left",
+                            "right",
+                            "either"
+                          ]
+                        },
+                        "min": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "foot",
+                        "min"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "minFrames": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "holdSec": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "maximum": 120
+              },
+              "graceSec": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 5
+              }
+            },
+            "required": [
+              "id",
+              "t",
+              "label",
+              "fallbackTip",
+              "type",
+              "target",
+              "joints",
+              "holdSec"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "learning": {
+                "type": "boolean"
+              },
+              "tolerance": {
+                "type": "object",
+                "properties": {
+                  "angleDeg": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 90
+                  },
+                  "curl": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coachAfterSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "timeoutSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "fallbackTip": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "rewindTo": {
+                "type": "number",
+                "minimum": 0
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "resume",
+                  "loop_segment"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "rep_count"
+              },
+              "metric": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "joint_angle"
+                      },
+                      "joint": {
+                        "type": "string",
+                        "enum": [
+                          "l_shoulder",
+                          "r_shoulder",
+                          "l_elbow",
+                          "r_elbow",
+                          "l_hip",
+                          "r_hip",
+                          "l_knee",
+                          "r_knee",
+                          "l_ankle",
+                          "r_ankle",
+                          "torso"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "joint"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "hand_openness"
+                      },
+                      "hand": {
+                        "default": "any",
+                        "type": "string",
+                        "enum": [
+                          "left",
+                          "right",
+                          "affected",
+                          "any"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "wrist_rotation"
+                      },
+                      "hand": {
+                        "default": "any",
+                        "type": "string",
+                        "enum": [
+                          "left",
+                          "right",
+                          "affected",
+                          "any"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "vertical_position"
+                      },
+                      "landmark": {
+                        "type": "string",
+                        "enum": [
+                          "nose",
+                          "wrists_mid",
+                          "l_wrist",
+                          "r_wrist",
+                          "hips_mid",
+                          "heels_mid",
+                          "l_heel",
+                          "r_heel"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "landmark"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "const": "heel_lift"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ]
+                  }
+                ]
+              },
+              "range": {
+                "type": "object",
+                "properties": {
+                  "low": {
+                    "type": "number"
+                  },
+                  "high": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "low",
+                  "high"
+                ]
+              },
+              "reps": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 500
+              },
+              "paceFollow": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "teacherRepSec": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "enabled",
+                  "teacherRepSec"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "t",
+              "label",
+              "fallbackTip",
+              "type",
+              "metric",
+              "range",
+              "reps"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "learning": {
+                "type": "boolean"
+              },
+              "tolerance": {
+                "type": "object",
+                "properties": {
+                  "angleDeg": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 90
+                  },
+                  "curl": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coachAfterSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "timeoutSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "fallbackTip": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "rewindTo": {
+                "type": "number",
+                "minimum": 0
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "resume",
+                  "loop_segment"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "rhythm_bpm"
+              },
+              "signal": {
+                "type": "object",
+                "properties": {
+                  "landmark": {
+                    "type": "string",
+                    "enum": [
+                      "nose",
+                      "wrists_mid",
+                      "l_wrist",
+                      "r_wrist",
+                      "hips_mid",
+                      "heels_mid",
+                      "l_heel",
+                      "r_heel"
+                    ]
+                  },
+                  "axis": {
+                    "type": "string",
+                    "enum": [
+                      "x",
+                      "y"
+                    ]
+                  }
+                },
+                "required": [
+                  "landmark",
+                  "axis"
+                ]
+              },
+              "bpm": {
+                "type": "object",
+                "properties": {
+                  "min": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "max": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  }
+                },
+                "required": [
+                  "min",
+                  "max"
+                ]
+              },
+              "count": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 500
+              },
+              "armsStraight": {
+                "type": "object",
+                "properties": {
+                  "minElbowDeg": {
+                    "type": "number",
+                    "minimum": 90,
+                    "maximum": 180
+                  }
+                },
+                "required": [
+                  "minElbowDeg"
+                ]
+              },
+              "metronomeBpm": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "id",
+              "t",
+              "label",
+              "fallbackTip",
+              "type",
+              "signal",
+              "bpm",
+              "count"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "learning": {
+                "type": "boolean"
+              },
+              "tolerance": {
+                "type": "object",
+                "properties": {
+                  "angleDeg": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 90
+                  },
+                  "curl": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coachAfterSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "timeoutSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "fallbackTip": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "rewindTo": {
+                "type": "number",
+                "minimum": 0
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "resume",
+                  "loop_segment"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "hand_sign"
+              },
+              "hand": {
+                "default": "any",
+                "type": "string",
+                "enum": [
+                  "left",
+                  "right",
+                  "affected",
+                  "any"
+                ]
+              },
+              "target": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "const": "reference"
+                  },
+                  "atSec": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "curl": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      },
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 5,
+                    "maxItems": 5
+                  },
+                  "spread": {
+                    "type": "object",
+                    "properties": {
+                      "thumb_index": {
+                        "type": "string",
+                        "enum": [
+                          "open",
+                          "closed"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "thumb_index"
+                    ]
+                  }
+                }
+              },
+              "minFrames": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "id",
+              "t",
+              "label",
+              "fallbackTip",
+              "type",
+              "target"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "learning": {
+                "type": "boolean"
+              },
+              "tolerance": {
+                "type": "object",
+                "properties": {
+                  "angleDeg": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 90
+                  },
+                  "curl": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coachAfterSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "timeoutSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "fallbackTip": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "rewindTo": {
+                "type": "number",
+                "minimum": 0
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "resume",
+                  "loop_segment"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "sequence_order"
+              },
+              "steps": {
+                "minItems": 2,
+                "maxItems": 12,
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "hand_sign"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "tolerance": {
+                          "type": "object",
+                          "properties": {
+                            "angleDeg": {
+                              "type": "number",
+                              "exclusiveMinimum": 0,
+                              "maximum": 90
+                            },
+                            "curl": {
+                              "type": "number",
+                              "exclusiveMinimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "hand": {
+                          "default": "any",
+                          "type": "string",
+                          "enum": [
+                            "left",
+                            "right",
+                            "affected",
+                            "any"
+                          ]
+                        },
+                        "target": {
+                          "type": "object",
+                          "properties": {
+                            "source": {
+                              "type": "string",
+                              "const": "reference"
+                            },
+                            "atSec": {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            "curl": {
+                              "type": "array",
+                              "prefixItems": [
+                                {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                },
+                                {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 1
+                                }
+                              ],
+                              "items": false,
+                              "minItems": 5,
+                              "maxItems": 5
+                            },
+                            "spread": {
+                              "type": "object",
+                              "properties": {
+                                "thumb_index": {
+                                  "type": "string",
+                                  "enum": [
+                                    "open",
+                                    "closed"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "thumb_index"
+                              ]
+                            }
+                          }
+                        },
+                        "minFrames": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "label",
+                        "target"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "pose_match"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "tolerance": {
+                          "type": "object",
+                          "properties": {
+                            "angleDeg": {
+                              "type": "number",
+                              "exclusiveMinimum": 0,
+                              "maximum": 90
+                            },
+                            "curl": {
+                              "type": "number",
+                              "exclusiveMinimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "target": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "source": {
+                                  "type": "string",
+                                  "const": "reference"
+                                },
+                                "atSec": {
+                                  "type": "number",
+                                  "minimum": 0
+                                }
+                              },
+                              "required": [
+                                "source",
+                                "atSec"
+                              ]
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "source": {
+                                  "type": "string",
+                                  "const": "angles"
+                                },
+                                "angles": {
+                                  "type": "object",
+                                  "propertyNames": {
+                                    "type": "string",
+                                    "enum": [
+                                      "l_shoulder",
+                                      "r_shoulder",
+                                      "l_elbow",
+                                      "r_elbow",
+                                      "l_hip",
+                                      "r_hip",
+                                      "l_knee",
+                                      "r_knee",
+                                      "l_ankle",
+                                      "r_ankle",
+                                      "torso"
+                                    ]
+                                  },
+                                  "additionalProperties": {
+                                    "type": "number",
+                                    "minimum": 0,
+                                    "maximum": 180
+                                  }
+                                }
+                              },
+                              "required": [
+                                "source",
+                                "angles"
+                              ]
+                            }
+                          ]
+                        },
+                        "joints": {
+                          "minItems": 1,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "l_shoulder",
+                              "r_shoulder",
+                              "l_elbow",
+                              "r_elbow",
+                              "l_hip",
+                              "r_hip",
+                              "l_knee",
+                              "r_knee",
+                              "l_ankle",
+                              "r_ankle",
+                              "torso"
+                            ]
+                          }
+                        },
+                        "conditions": {
+                          "type": "array",
+                          "items": {
+                            "oneOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "heel_lift"
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "min"
+                                ]
+                              },
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "kind": {
+                                    "type": "string",
+                                    "const": "foot_lift"
+                                  },
+                                  "foot": {
+                                    "type": "string",
+                                    "enum": [
+                                      "left",
+                                      "right",
+                                      "either"
+                                    ]
+                                  },
+                                  "min": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "kind",
+                                  "foot",
+                                  "min"
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "minFrames": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "label",
+                        "target",
+                        "joints"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "stepWindowSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "required": [
+              "id",
+              "t",
+              "label",
+              "fallbackTip",
+              "type",
+              "steps"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "t": {
+                "type": "number",
+                "minimum": 0
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "learning": {
+                "type": "boolean",
+                "const": false
+              },
+              "tolerance": {
+                "type": "object",
+                "properties": {
+                  "angleDeg": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 90
+                  },
+                  "curl": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "additionalProperties": false
+              },
+              "coachAfterSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "timeoutSec": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "fallbackTip": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "rewindTo": {
+                "type": "number",
+                "minimum": 0
+              },
+              "then": {
+                "type": "string",
+                "enum": [
+                  "resume",
+                  "loop_segment"
+                ]
+              },
+              "type": {
+                "type": "string",
+                "const": "safety_prerequisite"
+              },
+              "checks": {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "object_near"
+                        },
+                        "object": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "near": {
+                          "default": "hips",
+                          "type": "string",
+                          "enum": [
+                            "hips",
+                            "hands"
+                          ]
+                        },
+                        "maxDistance": {
+                          "type": "number",
+                          "exclusiveMinimum": 0,
+                          "maximum": 1
+                        },
+                        "minScore": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        "allowAlternatives": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "object",
+                        "maxDistance",
+                        "minScore"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "full_body_visible"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "upper_body_visible"
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "hands_visible"
+                        },
+                        "count": {
+                          "default": 1,
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "const": 1
+                            },
+                            {
+                              "type": "number",
+                              "const": 2
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "kind"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "stable"
+                        },
+                        "maxLateralSway": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        "windowSec": {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "maxLateralSway",
+                        "windowSec"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "minFrames": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "id",
+              "t",
+              "label",
+              "fallbackTip",
+              "type",
+              "checks"
+            ]
+          }
+        ]
+      }
+    },
+    "credits": {
+      "type": "object",
+      "properties": {
+        "creator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "license": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "creator",
+        "license"
+      ]
+    }
+  },
+  "required": [
+    "istep",
+    "id",
+    "title",
+    "channel",
+    "language",
+    "video",
+    "tracking",
+    "camera",
+    "gates"
+  ],
+  "additionalProperties": {}
+}

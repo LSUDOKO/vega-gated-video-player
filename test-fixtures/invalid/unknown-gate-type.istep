@@ -1,0 +1,116 @@
+{
+  "istep": "1.0",
+  "id": "kids-forest-walk-v1",
+  "title": "The Forest Walk",
+  "channel": "kids",
+  "language": "en-US",
+  "video": {
+    "src": "video.mp4",
+    "durationSec": 40
+  },
+  "tracking": [
+    "pose"
+  ],
+  "camera": {
+    "view": "front",
+    "hint": "Put the camera where it can see you from head to toe."
+  },
+  "defaults": {
+    "tolerance": {
+      "angleDeg": 30
+    }
+  },
+  "gates": [
+    {
+      "id": "tree",
+      "t": 7,
+      "type": "dance_battle",
+      "label": "Stretch tall like a tree",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "l_shoulder": 165,
+          "r_shoulder": 165,
+          "l_elbow": 165,
+          "r_elbow": 165
+        }
+      },
+      "joints": [
+        "l_shoulder",
+        "r_shoulder",
+        "l_elbow",
+        "r_elbow"
+      ],
+      "minFrames": 8,
+      "fallbackTip": "Reach both arms high up to the sky!"
+    },
+    {
+      "id": "mouse",
+      "t": 15,
+      "type": "pose_match",
+      "label": "Crouch small like a mouse",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "l_knee": 90,
+          "r_knee": 90
+        }
+      },
+      "joints": [
+        "l_knee",
+        "r_knee"
+      ],
+      "minFrames": 8,
+      "fallbackTip": "Bend your knees and get down low, tiny like a mouse!"
+    },
+    {
+      "id": "flamingo",
+      "t": 24,
+      "type": "hold_duration",
+      "label": "Stand on one foot like a flamingo",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "torso": 0
+        }
+      },
+      "joints": [
+        "torso"
+      ],
+      "conditions": [
+        {
+          "kind": "foot_lift",
+          "foot": "either",
+          "min": 0.1
+        }
+      ],
+      "holdSec": 2,
+      "graceSec": 0.6,
+      "fallbackTip": "Lift one foot up and balance — you can do it!"
+    },
+    {
+      "id": "wave",
+      "t": 33,
+      "type": "pose_match",
+      "label": "Wave goodbye",
+      "target": {
+        "source": "angles",
+        "angles": {
+          "r_shoulder": 130
+        }
+      },
+      "joints": [
+        "r_shoulder"
+      ],
+      "tolerance": {
+        "angleDeg": 40
+      },
+      "minFrames": 6,
+      "fallbackTip": "Lift your hand up high and wave bye-bye!"
+    }
+  ],
+  "credits": {
+    "creator": "InStep demonstration lesson",
+    "license": "CC-BY-4.0"
+  }
+}

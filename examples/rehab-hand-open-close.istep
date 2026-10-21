@@ -1,0 +1,50 @@
+{
+  "istep": "1.0",
+  "id": "rehab-hand-open-close-v1",
+  "title": "Open and close your hand — 20 reps",
+  "channel": "stroke_rehab",
+  "language": "en-US",
+  "video": {
+    "src": "video.mp4",
+    "durationSec": 20
+  },
+  "tracking": [
+    "hands"
+  ],
+  "camera": {
+    "view": "hands",
+    "hint": "Rest your forearm on a table and show your hand to the camera."
+  },
+  "disclaimer": "Use exercises prescribed or approved by your physiotherapist. Stop if you feel pain, dizziness or unsteadiness.",
+  "reference": {
+    "src": "reference.json"
+  },
+  "gates": [
+    {
+      "id": "open-close",
+      "t": 8,
+      "type": "rep_count",
+      "label": "Open and close your hand",
+      "metric": {
+        "kind": "hand_openness",
+        "hand": "affected"
+      },
+      "range": {
+        "low": 0.25,
+        "high": 0.75
+      },
+      "reps": 20,
+      "paceFollow": {
+        "enabled": true,
+        "teacherRepSec": 2
+      },
+      "rewindTo": 4,
+      "then": "loop_segment",
+      "fallbackTip": "Open your fingers as wide as you comfortably can, then make a soft fist."
+    }
+  ],
+  "credits": {
+    "creator": "InStep demonstration lesson",
+    "license": "CC-BY-4.0"
+  }
+}
