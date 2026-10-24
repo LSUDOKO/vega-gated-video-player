@@ -45,7 +45,8 @@ export function App() {
   }, [frames$]);
   return (
     <GatedPlayer
-      source={{ uri: 'http://10.0.2.2:8000/video.mp4' }}
+      // Vega's media player only plays HTTPS sources (plain http:// fails with a media error).
+      source={{ uri: 'https://example.com/your-lesson/video.mp4' }}
       track={track}
       frames$={frames$}
       style={{ flex: 1 }}

@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>vega-gated-video-player · live demo</title>
+    <meta
+      name="description"
+      content="A video player that pauses at .istep gates and resumes when pose or hand landmarks pass them. Live demo with a simulated learner."
+    />
+    <meta name="theme-color" content="#0D0E2C" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --canvas: #0d0e2c;
+        --surface: #1a1c3f;
+        --surface2: #272a52;
+        --text: #f5f6fe;
+        --muted: #b8bcd5;
+        --faint: #a1a6c1;
+        --ink: #021630;
+        --accent: #5fc6ff;
+        --ok: #49de78;
+        --near: #ffb439;
+        --far: #ff6762;
+        --info: #b5b8f1;
+        --radius: 18px;
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background:
+          radial-gradient(1200px 500px at 85% -10%, #382e6355, transparent 60%),
+          radial-gradient(900px 400px at -10% 10%, #18184480, transparent 60%), var(--canvas);
+        color: var(--text);
+        font:
+          400 15px/1.55 Inter,
+          system-ui,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--accent);
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.88em;
+        background: #ffffff10;
+        padding: 0.1em 0.4em;
+        border-radius: 6px;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+      header.top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 0;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        min-width: 0;
+      }
+      .brand b {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .mark {
+        width: 26px;
+        height: 26px;
+        flex: none;
+        border-radius: 8px;
+        background: var(--accent);
+        box-shadow: 4px 4px 0 #05061a73;
+        position: relative;
+      }
+      .mark::after {
+        content: '';
+        position: absolute;
+        inset: 8px 7px 8px 10px;
+        background: var(--ink);
+        clip-path: polygon(0 0, 100% 50%, 0 100%);
+      }
+      .tag {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink);
+        background: var(--accent);
+        padding: 2px 8px;
+        border-radius: 99px;
+        flex: none;
+      }
+      nav a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 99px;
+        background: var(--surface);
+        white-space: nowrap;
+      }
+      nav a:hover {
+        background: var(--surface2);
+      }
+      .hero {
+        padding: 18px 0 22px;
+        max-width: 780px;
+      }
+      h1 {
+        font-size: clamp(30px, 5vw, 48px);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        margin: 0 0 14px;
+        font-weight: 800;
+      }
+      h1 em {
+        font-style: normal;
+        color: var(--accent);
+      }
+      .hero p {
+        color: var(--muted);
+        margin: 0;
+        font-size: 16px;
+      }
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 18px;
+        align-items: flex-end;
+        margin-bottom: 18px;
+      }
+      .group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--faint);
+        margin: 0 0 6px 2px;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--surface);
+        border-radius: 99px;
+        padding: 4px;
+        gap: 2px;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: 0;
+        color: var(--text);
+      }
+      .seg button {
+        background: transparent;
+        padding: 8px 16px;
+        border-radius: 99px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .seg button[aria-pressed='true'] {
+        background: var(--surface2);
+        color: var(--text);
+        box-shadow: inset 0 0 0 1.5px var(--accent);
+      }
+      .primary {
+        background: var(--accent);
+        color: var(--ink);
+        font-weight: 700;
+        padding: 12px 22px;
+        border-radius: 99px;
+        box-shadow: 4px 4px 0 #05061a73;
+      }
+      .ghost {
+        background: var(--surface);
+        padding: 12px 18px;
+        border-radius: 99px;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      button:focus-visible {
+        outline: 2px solid var(--text);
+        outline-offset: 2px;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-left: auto;
+      }
+      .stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+        gap: 16px;
+      }
+      .card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 14px;
+        box-shadow: 8px 10px 0 #05061a40;
+        min-width: 0;
+      }
+      .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin: 2px 4px 10px;
+        font-weight: 700;
+      }
+      .pill {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--info);
+        background: #b5b8f11c;
+        padding: 3px 9px;
+        border-radius: 99px;
+        white-space: nowrap;
+      }
+      .video-wrap {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #000;
+        aspect-ratio: 16 / 9;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+      }
+      .hud {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px 10px 10px;
+        border-radius: 14px;
+        background: #0d0e2cd9;
+        backdrop-filter: blur(6px);
+      }
+      .hud-text {
+        min-width: 0;
+      }
+      .hud-text b {
+        display: block;
+        font-size: clamp(14px, 2vw, 18px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ring {
+        --p: 0;
+        --size: 44px;
+        width: var(--size);
+        height: var(--size);
+        flex: none;
+        border-radius: 50%;
+        background:
+          radial-gradient(closest-side, var(--surface) 72%, transparent 73%),
+          conic-gradient(var(--ring, var(--accent)) calc(var(--p) * 360deg), var(--surface2) 0);
+        transition: --p 0.2s;
+      }
+      .hud .ring {
+        background:
+          radial-gradient(closest-side, #0d0e2c 72%, transparent 73%),
+          conic-gradient(var(--ring, var(--accent)) calc(var(--p) * 360deg), var(--surface2) 0);
+      }
+      [data-phase='passing'] .ring,
+      .gate-card[data-phase='passing'] .ring {
+        --ring: var(--ok);
+      }
+      .phase {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 2px 9px;
+        border-radius: 99px;
+        background: var(--surface2);
+        color: var(--muted);
+      }
+      .phase[data-phase='gate'] {
+        background: var(--accent);
+        color: var(--ink);
+      }
+      .phase[data-phase='passing'],
+      .phase[data-phase='ended'] {
+        background: var(--ok);
+        color: #04210f;
+      }
+      .phase[data-phase='safety_stop'],
+      .phase[data-phase='camera_lost'] {
+        background: var(--far);
+        color: #2a0505;
+      }
+      .timeline {
+        position: relative;
+        height: 8px;
+        border-radius: 99px;
+        background: var(--surface2);
+        margin: 16px 6px 6px;
+      }
+      .tl-fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: 99px;
+        background: var(--accent);
+        opacity: 0.55;
+      }
+      .tl-gate {
+        position: absolute;
+        top: 50%;
+        width: 14px;
+        height: 14px;
+        margin: -7px 0 0 -7px;
+        border-radius: 50%;
+        background: var(--surface);
+        box-shadow: inset 0 0 0 2.5px var(--accent);
+      }
+      .tl-gate[data-state='done'] {
+        background: var(--ok);
+        box-shadow: none;
+      }
+      .tl-gate[data-state='now'] {
+        background: var(--accent);
+        box-shadow: 0 0 0 5px #5fc6ff33;
+      }
+      .tl-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--faint);
+        margin: 10px 6px 0;
+      }
+      #lesson-meta {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #clock {
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      canvas {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        display: block;
+        border-radius: 12px;
+        background: linear-gradient(#181844, #272950);
+      }
+      #learner-caption {
+        margin: 10px 4px 2px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .panels {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 16px;
+        margin-top: 16px;
+      }
+      .gate-row {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+      }
+      .gate-card .ring {
+        --size: 64px;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--faint);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      #gate-type:empty {
+        display: none;
+      }
+      #gate-type {
+        text-transform: none;
+        letter-spacing: 0;
+        margin-left: 6px;
+      }
+      #gate-label {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 2px 0;
+      }
+      #gate-metric {
+        font-weight: 600;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+      }
+      #gate-wait {
+        color: var(--faint);
+        font-size: 13px;
+        margin-left: 8px;
+        font-variant-numeric: tabular-nums;
+      }
+      #gate-hint {
+        margin: 12px 0 0;
+        color: var(--near);
+        font-weight: 600;
+        min-height: 1.5em;
+      }
+      #gate-tip {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      #gate-checks {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      #gate-checks li {
+        font-size: 14px;
+        padding-left: 22px;
+        position: relative;
+      }
+      #gate-checks li::before {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 5px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--far);
+      }
+      #gate-checks li[data-ok='true']::before {
+        background: var(--ok);
+      }
+      #log {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: 252px;
+        overflow: auto;
+        font-size: 13px;
+      }
+      #log:empty::before {
+        content: 'Events from onEvent() appear here.';
+        color: var(--faint);
+      }
+      .ev {
+        display: grid;
+        grid-template-columns: 46px auto minmax(0, 1fr);
+        gap: 8px;
+        align-items: baseline;
+        padding: 6px 2px;
+        border-top: 1px solid #ffffff0d;
+      }
+      .ev-t {
+        color: var(--faint);
+        font-variant-numeric: tabular-nums;
+      }
+      .ev code {
+        color: var(--info);
+      }
+      .ev-gate_passed code,
+      .ev-ended code {
+        color: var(--ok);
+      }
+      .ev-gate_stuck code {
+        color: var(--near);
+      }
+      .ev-safety_stop code,
+      .ev-camera_lost code {
+        color: var(--far);
+      }
+      .ev-x {
+        color: var(--muted);
+        overflow-wrap: anywhere;
+      }
+      .note {
+        margin: 18px 0 0;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: #ffffff08;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .note b {
+        color: var(--text);
+      }
+      footer {
+        color: var(--faint);
+        font-size: 13px;
+        padding: 26px 0 40px;
+      }
+      footer p {
+        margin: 6px 0;
+      }
+      @media (max-width: 860px) {
+        .stage,
+        .panels {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .actions {
+          margin-left: 0;
+        }
+        canvas {
+          aspect-ratio: 4 / 3;
+        }
+      }
+      @media (max-width: 420px) {
+        .seg button {
+          padding: 8px 12px;
+        }
+        .tag {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span><b>vega-gated-video-player</b
+          ><span class="tag">live demo</span>
+        </div>
+        <nav><a href="https://github.com/LSUDOKO/vega-gated-video-player">GitHub</a></nav>
+      </header>
+
+      <section class="hero">
+        <h1>The video that <em>waits</em> for the learner.</h1>
+        <p>
+          This page runs <code>createGatedPlayer()</code>, the same controller that drives
+          <code>&lt;GatedPlayer&gt;</code> on Fire TV (Vega OS), on a plain HTML <code>&lt;video&gt;</code>.
+          The video pauses at each <code>.istep</code> gate. A simulated learner streams pose and hand
+          landmarks, and the gate engine decides when the video may go on.
+        </p>
+      </section>
+
+      <section class="controls" aria-label="Demo controls">
+        <div class="group">
+          <label id="lbl-lesson">Lesson</label>
+          <div class="seg" role="group" aria-labelledby="lbl-lesson">
+            <button data-lesson="heel" aria-pressed="true">Heel raises</button>
+            <button data-lesson="abc" aria-pressed="false">Fingerspelling</button>
+          </div>
+        </div>
+        <div class="group">
+          <label id="lbl-mode">Simulated learner</label>
+          <div class="seg" role="group" aria-labelledby="lbl-mode">
+            <button data-mode="watch" aria-pressed="true">Watch</button>
+            <button data-mode="perform" aria-pressed="false">Perform</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button id="sound" class="ghost" aria-pressed="true">Sound on</button>
+          <button id="start" class="primary">Start lesson</button>
+        </div>
+      </section>
+
+      <section class="stage">
+        <div class="card">
+          <div class="video-wrap">
+            <video id="video" playsinline preload="auto"></video>
+            <div class="hud" id="hud" data-phase="ready">
+              <div class="ring" id="hud-ring" aria-hidden="true"></div>
+              <div class="hud-text">
+                <span class="phase" id="phase" data-phase="ready" aria-live="polite">Press Start</span>
+                <b id="hud-label"></b>
+              </div>
+            </div>
+          </div>
+          <div class="timeline" id="timeline" aria-hidden="true"></div>
+          <div class="tl-meta"><span id="lesson-meta"></span><span id="clock"></span></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <span>Simulated learner</span><span class="pill">no camera · landmarks only</span>
+          </div>
+          <canvas id="skeleton" aria-label="Skeleton of the simulated learner"></canvas>
+          <p id="learner-caption"></p>
+        </div>
+      </section>
+
+      <section class="panels">
+        <div class="card gate-card">
+          <div class="card-head"><span>Current gate</span></div>
+          <div class="gate-row">
+            <div class="ring" id="gate-ring" aria-hidden="true"></div>
+            <div style="min-width: 0">
+              <div class="eyebrow"><span id="gate-index"></span><code id="gate-type"></code></div>
+              <div id="gate-label"></div>
+              <div><span id="gate-metric"></span><span id="gate-wait"></span></div>
+            </div>
+          </div>
+          <p id="gate-hint" aria-live="polite"></p>
+          <ul id="gate-checks"></ul>
+          <p id="gate-tip"></p>
+        </div>
+        <div class="card">
+          <div class="card-head"><span>Event log</span><span class="pill">PlayerEvent</span></div>
+          <ol id="log"></ol>
+        </div>
+      </section>
+
+      <p class="note">
+        <b>How to try it.</b> Press <b>Start lesson</b> with the learner on <b>Watch</b>. The video pauses at
+        the first gate and stays paused. Switch to <b>Perform</b> and the gate engine passes the gate, so the
+        video goes on. In a real app the landmarks come from a pose tracker (InStep uses MediaPipe in the
+        browser of a phone). This page has no camera and sends nothing over the network.
+      </p>
+      <p class="note" id="disclaimer"></p>
+
+      <footer>
+        <p>
+          Lesson videos and <code>.istep</code> tracks: InStep demonstration lessons, illustrated animations
+          with no real person, CC-BY-4.0. The fingerspelling handshapes are illustrated and not yet reviewed
+          by Deaf signers. Narration: synthetic Kokoro-82M voice. Details in
+          <a href="https://github.com/LSUDOKO/InStep/blob/main/content/CREDITS.md">InStep's CREDITS.md</a>.
+        </p>
+        <p>
+          Code: MIT, from <a href="https://github.com/LSUDOKO/InStep">InStep</a>.
+          <a href="https://github.com/LSUDOKO/vega-gated-video-player">Source on GitHub</a>.
+        </p>
+      </footer>
+    </div>
+    <script type="module" src="dist/main.js"></script>
+  </body>
+</html>

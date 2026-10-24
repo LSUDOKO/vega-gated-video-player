@@ -1,8 +1,13 @@
 {
   "name": "vega-gated-video-player",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Body-aware video for Vega OS: a player that pauses at .istep gates and resumes when live pose or hand landmarks pass them.",
   "license": "MIT",
+  "author": "LSUDOKO",
+  "homepage": "https://lsudoko.github.io/vega-gated-video-player/",
+  "bugs": {
+    "url": "https://github.com/LSUDOKO/vega-gated-video-player/issues"
+  },
   "repository": "github:LSUDOKO/vega-gated-video-player",
   "keywords": [
     "vega",
@@ -24,9 +29,14 @@
     "examples",
     "!src/**/*.test.ts"
   ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p demo",
+    "demo:build": "esbuild demo/main.ts --bundle --format=esm --minify --target=es2020 --loader:.istep=json --outfile=demo/dist/main.js",
+    "demo:serve": "npm run demo:build && node demo/serve.mjs 8080"
   },
   "dependencies": {
     "zod": "^4.6.7"
@@ -48,6 +58,7 @@
     }
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "typescript": "~5.9.3",
     "vitest": "^5.0.5",
     "@types/node": "^22.10.0"
